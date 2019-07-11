@@ -1,0 +1,30 @@
+
+formatVersion: 1
+inputs:
+  size:
+    title: T-Shirt Size
+    default: vm-small
+    type: string
+    enum:
+      - vm-small
+      - vm-medium
+      - vm-large
+resources:
+  Cloud_Machine_1:
+    type: Cloud.Machine
+    properties:
+      cloudConfig: |
+        #cloud-config
+        packages:
+          - wget
+        runcmd:
+          - cd /tmp
+          - echo "hello world" > tmp.txt
+          - wget https://dev.mysql.com/get/mysql80-community-release-el7-3.noarch.rpm
+          - sudo rpm -ivh mysql80-community-release-el7-3.noarch.rpm
+          - sudo yum -y install mysql-server
+          - sudo systemctl start mysqld
+      image: centos7-ci
+      name: toddb
+      flavor: '${input.size}'
+      folderName: Workloads
